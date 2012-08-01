@@ -61,7 +61,7 @@ class Solarium_Autoloader
      */
     static public function register()
     {
-        spl_autoload_register(array(new self, 'load'));
+        spl_autoload_register(array(new self, 'load'), true, true);
     }
 
     /**
@@ -83,7 +83,7 @@ class Solarium_Autoloader
                 array('', '/'),
                 $class
             );
-            
+
             $file = dirname(__FILE__) . '/' . $class . '.php';
 
             require($file);
