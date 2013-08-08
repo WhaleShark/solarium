@@ -524,15 +524,16 @@ class Solarium_Client extends Solarium_Configurable
      *
      * @param Solarium_Query $query
      * @param array Solarium_Client_Response $response
+     * @param Solarium_Client_Request $request
      * @return Solarium_Result
      */
-    public function createResult($query, $response)
+    public function createResult($query, $response, $request)
     {
         $pluginResult = $this->_callPlugins('preCreateResult', array($query, $response), true);
         if($pluginResult !== null) return $pluginResult;
 
         $resultClass = $query->getResultClass();
-        $result = new $resultClass($this, $query, $response);
+        $result = new $resultClass($this, $query, $response, $request);
 
         $this->_callPlugins('postCreateResult', array($query, $response, $result));
 
@@ -552,7 +553,7 @@ class Solarium_Client extends Solarium_Configurable
 
         $request = $this->createRequest($query);
         $response = $this->executeRequest($request);
-        $result = $this->createResult($query, $response);
+        $result = $this->createResult($query, $response, $request);
 
         $this->_callPlugins('postExecute', array($query, $result));
 

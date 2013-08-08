@@ -84,9 +84,10 @@ class Solarium_Result
      * @param Solarium_Client $client
      * @param Solarium_Query $query
      * @param Solarium_Client_Response $response
+     * @param Solarium_Client_Request $request
      * @return void
      */
-    public function __construct($client, $query, $response)
+    public function __construct($client, $query, $response, $request)
     {
         $this->_client = $client;
         $this->_query = $query;
@@ -95,10 +96,10 @@ class Solarium_Result
         // check status for error (range of 400 and 500)
         $statusNum = floor($response->getStatusCode() / 100);
         if ($statusNum == 4 || $statusNum == 5) {
-            throw new Solarium_Client_HttpException(
-                $response->getStatusMessage(),
-                $response->getStatusCode()
-            );
+            $data = array();
+            $data['request'] = $request->getParams();
+            $data['uri'] = $client->getAdapter()->getBaseUri() . $request->getUri();
+            throw new Solarium_Client_RmnHttpException("HTTP request failed :" .$response->getStatusMessage(), $data, $response->getStatusCode());
         }
     }
 

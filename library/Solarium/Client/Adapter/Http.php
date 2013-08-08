@@ -55,11 +55,12 @@ class Solarium_Client_Adapter_Http extends Solarium_Client_Adapter
     public function execute($request)
     {
         $context = $this->createContext($request);
+
         $uri = $this->getBaseUri() . $request->getUri();
 
         list($data, $headers) = $this->_getData($uri, $context);
 
-        $this->check($data, $headers);
+        $this->check($data, $headers, $request);
 
         return new Solarium_Client_Response($data, $headers);
     }
@@ -70,14 +71,21 @@ class Solarium_Client_Adapter_Http extends Solarium_Client_Adapter
      * @throws Solarium_Client_HttpException
      * @param string $data
      * @param array $headers
+     * @param Solarium_Client_Request|null $request
      * @return void
      */
-    public function check($data, $headers)
+    public function check($data, $headers, $request = null)
     {
-        // if there is no data and there are no headers it's a total failure,
-        // a connection to the host was impossible.
+
         if (false === $data && count($headers) == 0) {
-            throw new Solarium_Client_HttpException("HTTP request failed");
+            $data = array();
+            if($request){
+                $data['request'] = $request->getParams();
+                $data['uri'] = $this->getBaseUri() . $request->getUri();
+                throw new Solarium_Client_RmnHttpException("HTTP request failed", $data);
+            } else {
+                throw new Solarium_Client_HttpException("HTTP request failed");
+            }
         }
     }
 

@@ -156,5 +156,6 @@ class Solarium_Client_Response
         $statusInfo = explode(' ', $statusHeader, 3);
         $this->_statusCode = $statusInfo[1];
         $this->_statusMessage = $statusInfo[2];
+
     }
 }

@@ -111,6 +111,7 @@ class Solarium_Client_Adapter_Curl extends Solarium_Client_Adapter
 
         curl_close($handle);
         $this->check($data, $headers);
+
         return new Solarium_Client_Response($data, $headers);
         // @codeCoverageIgnoreEnd
     }
