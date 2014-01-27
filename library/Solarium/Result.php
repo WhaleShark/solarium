@@ -138,7 +138,9 @@ class Solarium_Result
             $this->_data = json_decode($this->_response->getBody(), true);
             if (null === $this->_data) {
                 throw new Solarium_Exception(
-                    'Solr JSON response could not be decoded'
+                    "Solr JSON response could not be decoded:" .
+                        "Response Status - " . $this->_response->getStatusCode() . ", " .
+                        "Response Body - " . $this->_response->getBody()
                 );
             }
         }
